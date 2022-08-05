@@ -1,5 +1,6 @@
 package com.totalshake.pagamentosys.services;
 
+import com.totalshake.pagamentosys.exceptions.PagamentoNaoEncontradoException;
 import com.totalshake.pagamentosys.models.Pagamento;
 import com.totalshake.pagamentosys.repositories.PagamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,5 +16,18 @@ public class PagamentoService extends BaseService {
     public List<Pagamento> retrieveAllPagamentos() {
         List<Pagamento> pagamentosList = pagamentoRepository.findAll();
         return pagamentosList;
+    }
+
+    public Pagamento retrievePagamentoById(Long idPagamento) {
+
+        Pagamento pagamento = null;
+        try {
+            pagamento = pagamentoRepository.findById(idPagamento).orElseThrow(
+                    () -> new PagamentoNaoEncontradoException("Pagamento: "+idPagamento+" não encontrado.")
+            );
+        } catch (Exception e) {
+            throw new PagamentoNaoEncontradoException("Pagamento: "+idPagamento+" não encontrado.");
+        }
+        return pagamento;
     }
 }
