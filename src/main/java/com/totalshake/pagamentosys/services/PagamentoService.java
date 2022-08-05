@@ -30,4 +30,10 @@ public class PagamentoService extends BaseService {
         }
         return pagamento;
     }
+
+    public void deletePagamentoById(Long idPagamento) throws PagamentoNaoEncontradoException {
+
+        this.retrievePagamentoById(idPagamento);
+        pagamentoRepository.deleteById(idPagamento);
+    }
 }
