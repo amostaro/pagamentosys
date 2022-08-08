@@ -22,13 +22,4 @@ public enum EnumStatus {
         this.descricao = descricao;
     }
 
-    public static EnumStatus valueOfCodigo(String codigo) {
-        if (StringUtils.isEmpty(codigo)) {
-            return null;
-        }
-        return Arrays.stream(EnumStatus.values())
-                .filter(element -> element.getCodigo().equalsIgnoreCase(codigo))
-                .findAny()
-                .orElse(null);
-    }
 }

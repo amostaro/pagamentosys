@@ -23,13 +23,4 @@ public enum EnumFormaPagamento {
         this.descricao = descricao;
     }
 
-    public static EnumFormaPagamento valueOfCodigo(String codigo) {
-        if (StringUtils.isEmpty(codigo)) {
-            return null;
-        }
-        return Arrays.stream(EnumFormaPagamento.values())
-                .filter(element -> element.getCodigo().equalsIgnoreCase(codigo))
-                .findAny()
-                .orElse(null);
-    }
 }
