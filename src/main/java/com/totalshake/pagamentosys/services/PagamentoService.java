@@ -1,7 +1,9 @@
 package com.totalshake.pagamentosys.services;
 
 import com.totalshake.pagamentosys.DTO.PagamentoDTO;
+import com.totalshake.pagamentosys.enums.EnumStatus;
 import com.totalshake.pagamentosys.exceptions.PagamentoNaoEncontradoException;
+import com.totalshake.pagamentosys.external.IntegracaoPedidoSysService;
 import com.totalshake.pagamentosys.models.Pagamento;
 import com.totalshake.pagamentosys.repositories.PagamentoRepository;
 import org.apache.commons.lang3.ObjectUtils;
@@ -15,6 +17,9 @@ public class PagamentoService extends BaseService {
 
     @Autowired
     PagamentoRepository pagamentoRepository;
+    @Autowired
+    IntegracaoPedidoSysService integracaoPedidoSysService;
+
     public List<Pagamento> retrieveAllPagamentos() {
         List<Pagamento> pagamentosList = pagamentoRepository.findAll();
         pagamentosList.stream()
@@ -45,14 +50,8 @@ public class PagamentoService extends BaseService {
     public Pagamento createPagamento(PagamentoDTO pagamentoDTO) throws PagamentoNaoEncontradoException {
 
         if (ObjectUtils.isEmpty(pagamentoDTO)) {
-            throw new PagamentoNaoEncontradoException("Operação inválida! Item Pedido não pode ser vazio.");
+            throw new PagamentoNaoEncontradoException("Operação inválida! Pagamento não pode ser vazio.");
         }
-
-        Long idPedido = pagamentoDTO.getPedidoId();
-
-//        Pedido pedido = pedidoRepository.findById(idPedido).orElseThrow(
-//                () -> new PedidoNaoEncontradoException("Operação inválida! Pedido não cadastrado.")
-//        );
 
         pagamentoDTO.setId(null);
         pagamentoDTO.setValor(pagamentoDTO.getValor());
@@ -70,4 +69,43 @@ public class PagamentoService extends BaseService {
         this.pagamentoRepository.save(pagamento);
         return pagamento;
     }
+
+    public Pagamento updatePagamento(PagamentoDTO pagamentoDTO) {
+
+        Pagamento pagamento = null;
+        if (!ObjectUtils.isEmpty(pagamentoDTO)) {
+            pagamento = this.retrievePagamentoById(pagamentoDTO.getId());
+
+            pagamento.setValor(pagamentoDTO.getValor());
+            pagamento.setNome(pagamentoDTO.getNome());
+            pagamento.setNumero(pagamentoDTO.getNumero());
+            pagamento.setExpiracao(pagamentoDTO.getExpiracao());
+            pagamento.setCodigo(pagamentoDTO.getCodigo());
+            pagamento.setStatus(pagamentoDTO.getStatus());
+            pagamento.setPedidoId(pagamentoDTO.getPedidoId());
+            pagamento.setFormaPagamento(pagamentoDTO.getFormaPagamento());
+
+        } else {
+            throw new PagamentoNaoEncontradoException("Pagamento: "+pagamentoDTO.getId() + " não encontrado.");
+        }
+
+        return pagamentoRepository.save(pagamento);
+    }
+
+    public Pagamento makePagamento(PagamentoDTO pagamentoDTO) throws PagamentoNaoEncontradoException {
+
+        //TODO - INTEGRACAO COM PEDIDOSYS
+
+        Long idPedido = pagamentoDTO.getPedidoId();
+
+        this.integracaoPedidoSysService.retrievePedidoById(idPedido);
+
+        pagamentoDTO.setStatus(EnumStatus.CONFIRMADO);
+
+        Pagamento pagamento = super.convertToModel(pagamentoDTO, Pagamento.class);
+
+        this.pagamentoRepository.save(pagamento);
+        return pagamento;
+    }
+
 }

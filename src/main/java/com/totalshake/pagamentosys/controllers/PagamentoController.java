@@ -46,4 +46,10 @@ public class PagamentoController extends BaseController {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(novoPagamento.getId()).toUri();
         return ResponseEntity.created(location).body(novoPagamento);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<Pagamento> updatePagamento(@Valid @RequestBody PagamentoDTO pagamentoDTO) throws PagamentoNaoEncontradoException {
+        Pagamento pagamento = pagamentoService.updatePagamento(pagamentoDTO);
+        return ResponseEntity.ok(pagamento);
+    }
 }
