@@ -47,6 +47,7 @@ public class PagamentoDTO {
 
     private Long pedidoId;
 
+    @Enumerated(EnumType.STRING)
     private EnumFormaPagamento formaPagamento;
 
 }

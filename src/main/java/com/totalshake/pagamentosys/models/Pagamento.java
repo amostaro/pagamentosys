@@ -59,6 +59,7 @@ public class Pagamento extends BaseEntity {
     @Column(name = "pedido_id")
     private Long pedidoId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "forma_pagamento")
     private EnumFormaPagamento formaPagamento;
 

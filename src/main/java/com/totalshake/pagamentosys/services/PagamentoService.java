@@ -1,5 +1,6 @@
 package com.totalshake.pagamentosys.services;
 
+import com.totalshake.pagamentosys.DTO.PagamentoDTO;
 import com.totalshake.pagamentosys.exceptions.PagamentoNaoEncontradoException;
 import com.totalshake.pagamentosys.models.Pagamento;
 import com.totalshake.pagamentosys.repositories.PagamentoRepository;
@@ -15,6 +16,9 @@ public class PagamentoService extends BaseService {
     PagamentoRepository pagamentoRepository;
     public List<Pagamento> retrieveAllPagamentos() {
         List<Pagamento> pagamentosList = pagamentoRepository.findAll();
+        pagamentosList.stream()
+                .map(pag -> (super.convertToDTO(pag, PagamentoDTO.class)))
+                .toList();
         return pagamentosList;
     }
 
