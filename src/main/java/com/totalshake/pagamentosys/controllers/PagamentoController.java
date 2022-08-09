@@ -1,6 +1,7 @@
 package com.totalshake.pagamentosys.controllers;
 
 import com.totalshake.pagamentosys.DTO.PagamentoDTO;
+import com.totalshake.pagamentosys.enums.EnumStatus;
 import com.totalshake.pagamentosys.exceptions.PagamentoNaoEncontradoException;
 import com.totalshake.pagamentosys.models.Pagamento;
 import com.totalshake.pagamentosys.services.PagamentoService;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.EnumSet;
 import java.util.List;
 
 @RestController
@@ -51,5 +53,11 @@ public class PagamentoController extends BaseController {
     public ResponseEntity<Pagamento> updatePagamento(@Valid @RequestBody PagamentoDTO pagamentoDTO) throws PagamentoNaoEncontradoException {
         Pagamento pagamento = pagamentoService.updatePagamento(pagamentoDTO);
         return ResponseEntity.ok(pagamento);
+    }
+
+    @PostMapping("/makePagamento")
+    public ResponseEntity<Pagamento> makePagamento(@Valid @RequestBody PagamentoDTO pagamentoDTO) throws PagamentoNaoEncontradoException {
+        this.pagamentoService.makePagamento(pagamentoDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,7 +1,6 @@
 package com.totalshake.pagamentosys.services;
 
 import com.totalshake.pagamentosys.DTO.PagamentoDTO;
-import com.totalshake.pagamentosys.enums.EnumStatus;
 import com.totalshake.pagamentosys.exceptions.PagamentoNaoEncontradoException;
 import com.totalshake.pagamentosys.external.IntegracaoPedidoSysService;
 import com.totalshake.pagamentosys.models.Pagamento;
@@ -10,6 +9,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -84,6 +84,7 @@ public class PagamentoService extends BaseService {
             pagamento.setStatus(pagamentoDTO.getStatus());
             pagamento.setPedidoId(pagamentoDTO.getPedidoId());
             pagamento.setFormaPagamento(pagamentoDTO.getFormaPagamento());
+            pagamento.setAtualizadoEm(new Date());
 
         } else {
             throw new PagamentoNaoEncontradoException("Pagamento: "+pagamentoDTO.getId() + " não encontrado.");
@@ -92,20 +93,25 @@ public class PagamentoService extends BaseService {
         return pagamentoRepository.save(pagamento);
     }
 
-    public Pagamento makePagamento(PagamentoDTO pagamentoDTO) throws PagamentoNaoEncontradoException {
+    public void makePagamento(PagamentoDTO pagamentoDTO) throws PagamentoNaoEncontradoException {
 
         //TODO - INTEGRACAO COM PEDIDOSYS
 
-        Long idPedido = pagamentoDTO.getPedidoId();
+        if (!ObjectUtils.isEmpty(pagamentoDTO)) {
 
-        this.integracaoPedidoSysService.retrievePedidoById(idPedido);
+            Pagamento pagamento = super.convertToModel(this.pagamentoRepository.findById(pagamentoDTO.getId()), Pagamento.class);
 
-        pagamentoDTO.setStatus(EnumStatus.CONFIRMADO);
+            pagamento.setStatus(pagamentoDTO.getStatus());
+            pagamento.setAtualizadoEm(new Date());
 
-        Pagamento pagamento = super.convertToModel(pagamentoDTO, Pagamento.class);
+            this.pagamentoRepository.save(pagamento);
 
-        this.pagamentoRepository.save(pagamento);
-        return pagamento;
+            Long idPedido = pagamentoDTO.getPedidoId();
+
+            this.integracaoPedidoSysService.makePagamentoByPedidoId(idPedido);
+
+        }
+
     }
 
 }
