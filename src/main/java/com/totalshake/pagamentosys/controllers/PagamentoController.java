@@ -57,6 +57,12 @@ public class PagamentoController extends BaseController {
         return ResponseEntity.ok(pagamento);
     }
 
+    @PutMapping("/pagar/pedido/{id}")
+    public void pagarPedidoById(@Valid @PathVariable("id") Long idPagamento) {
+        this.pagamentoService.pagarPedidoById(idPagamento);
+
+    }
+
     @GetMapping("/")
     public void retrieveAllPedidos() {
         this.pedidoPagoEndPoint.retrieveAllPedidos();
