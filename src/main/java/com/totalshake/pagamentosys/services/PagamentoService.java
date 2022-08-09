@@ -1,9 +1,9 @@
 package com.totalshake.pagamentosys.services;
 
 import com.totalshake.pagamentosys.DTO.PagamentoDTO;
-import com.totalshake.pagamentosys.enums.EnumStatus;
+//import com.totalshake.pagamentosys.enums.EnumStatus;
 import com.totalshake.pagamentosys.exceptions.PagamentoNaoEncontradoException;
-import com.totalshake.pagamentosys.external.IntegracaoPedidoSysService;
+//import com.totalshake.pagamentosys.external.IntegracaoPedidoSysService;
 import com.totalshake.pagamentosys.models.Pagamento;
 import com.totalshake.pagamentosys.repositories.PagamentoRepository;
 import org.apache.commons.lang3.ObjectUtils;
@@ -17,8 +17,8 @@ public class PagamentoService extends BaseService {
 
     @Autowired
     PagamentoRepository pagamentoRepository;
-    @Autowired
-    IntegracaoPedidoSysService integracaoPedidoSysService;
+//    @Autowired
+//    IntegracaoPedidoSysService integracaoPedidoSysService;
 
     public List<Pagamento> retrieveAllPagamentos() {
         List<Pagamento> pagamentosList = pagamentoRepository.findAll();
@@ -92,20 +92,20 @@ public class PagamentoService extends BaseService {
         return pagamentoRepository.save(pagamento);
     }
 
-    public Pagamento makePagamento(PagamentoDTO pagamentoDTO) throws PagamentoNaoEncontradoException {
-
-        //TODO - INTEGRACAO COM PEDIDOSYS
-
-        Long idPedido = pagamentoDTO.getPedidoId();
-
-        this.integracaoPedidoSysService.retrievePedidoById(idPedido);
-
-        pagamentoDTO.setStatus(EnumStatus.CONFIRMADO);
-
-        Pagamento pagamento = super.convertToModel(pagamentoDTO, Pagamento.class);
-
-        this.pagamentoRepository.save(pagamento);
-        return pagamento;
-    }
+//    public Pagamento makePagamento(PagamentoDTO pagamentoDTO) throws PagamentoNaoEncontradoException {
+//
+//        //TODO - INTEGRACAO COM PEDIDOSYS
+//
+//        Long idPedido = pagamentoDTO.getPedidoId();
+//
+//        this.integracaoPedidoSysService.retrievePedidoById(idPedido);
+//
+//        pagamentoDTO.setStatus(EnumStatus.CONFIRMADO);
+//
+//        Pagamento pagamento = super.convertToModel(pagamentoDTO, Pagamento.class);
+//
+//        this.pagamentoRepository.save(pagamento);
+//        return pagamento;
+//    }
 
 }
