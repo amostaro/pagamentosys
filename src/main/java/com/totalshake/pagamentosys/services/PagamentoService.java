@@ -3,6 +3,7 @@ package com.totalshake.pagamentosys.services;
 import com.totalshake.pagamentosys.DTO.PagamentoDTO;
 import com.totalshake.pagamentosys.enums.EnumStatus;
 import com.totalshake.pagamentosys.exceptions.PagamentoNaoEncontradoException;
+import com.totalshake.pagamentosys.exceptions.PedidoNaoEstaProntoException;
 import com.totalshake.pagamentosys.interfaces.PedidoPagoEndPoint;
 import com.totalshake.pagamentosys.models.Pagamento;
 import com.totalshake.pagamentosys.repositories.PagamentoRepository;
@@ -53,6 +54,11 @@ public class PagamentoService extends BaseService {
 
         if (ObjectUtils.isEmpty(pagamentoDTO)) {
             throw new PagamentoNaoEncontradoException("Operação inválida! Pagamento não pode ser vazio.");
+        }
+
+        String statusPedido = this.pedidoPagoEndPoint.buscarStatusPedidoById(pagamentoDTO.getPedidoId());
+        if (statusPedido != "PRONTO") {
+            throw new PedidoNaoEstaProntoException("Operação inválida! Pedido ainda não esta pronto.");
         }
 
         pagamentoDTO.setId(null);

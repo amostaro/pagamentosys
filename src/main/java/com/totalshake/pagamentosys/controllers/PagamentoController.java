@@ -66,6 +66,7 @@ public class PagamentoController extends BaseController {
     @GetMapping("/")
     public void retrieveAllPedidos() {
         this.pedidoPagoEndPoint.retrieveAllPedidos();
-
     }
+
+
 }
