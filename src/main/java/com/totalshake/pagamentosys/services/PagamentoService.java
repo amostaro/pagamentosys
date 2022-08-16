@@ -57,7 +57,7 @@ public class PagamentoService extends BaseService {
         }
 
         String statusPedido = this.pedidoPagoEndPoint.buscarStatusPedidoById(pagamentoDTO.getPedidoId());
-        if (statusPedido != "PRONTO") {
+        if (!statusPedido.equals("PRONTO")) {
             throw new PedidoNaoEstaProntoException("Operação inválida! Pedido ainda não esta pronto.");
         }
 
