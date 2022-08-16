@@ -2,7 +2,6 @@ package com.totalshake.pagamentosys.controllers;
 
 import com.totalshake.pagamentosys.DTO.PagamentoDTO;
 import com.totalshake.pagamentosys.exceptions.PagamentoNaoEncontradoException;
-import com.totalshake.pagamentosys.interfaces.PedidoPagoEndPoint;
 import com.totalshake.pagamentosys.models.Pagamento;
 import com.totalshake.pagamentosys.services.PagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,6 @@ public class PagamentoController extends BaseController {
 
     @Autowired
     PagamentoService pagamentoService;
-
-    @Autowired
-    PedidoPagoEndPoint pedidoPagoEndPoint;
 
     @GetMapping("/retrieve-all")
     public ResponseEntity<List<Pagamento>> retrieveAllPagamentos() {
@@ -62,11 +58,5 @@ public class PagamentoController extends BaseController {
         this.pagamentoService.pagarPedidoById(idPagamento);
 
     }
-
-    @GetMapping("/")
-    public void retrieveAllPedidos() {
-        this.pedidoPagoEndPoint.retrieveAllPedidos();
-    }
-
 
 }

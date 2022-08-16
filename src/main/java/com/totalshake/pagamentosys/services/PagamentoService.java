@@ -4,7 +4,7 @@ import com.totalshake.pagamentosys.DTO.PagamentoDTO;
 import com.totalshake.pagamentosys.enums.EnumStatus;
 import com.totalshake.pagamentosys.exceptions.PagamentoNaoEncontradoException;
 import com.totalshake.pagamentosys.exceptions.PedidoNaoEstaProntoException;
-import com.totalshake.pagamentosys.interfaces.PedidoPagoEndPoint;
+import com.totalshake.pagamentosys.interfaces.PedidoSysEndPoint;
 import com.totalshake.pagamentosys.models.Pagamento;
 import com.totalshake.pagamentosys.repositories.PagamentoRepository;
 import org.apache.commons.lang3.ObjectUtils;
@@ -21,7 +21,7 @@ public class PagamentoService extends BaseService {
     PagamentoRepository pagamentoRepository;
 
     @Autowired
-    PedidoPagoEndPoint pedidoPagoEndPoint;
+    PedidoSysEndPoint pedidoSysEndPoint;
 
     public List<Pagamento> retrieveAllPagamentos() {
         List<Pagamento> pagamentosList = pagamentoRepository.findAll();
@@ -56,7 +56,7 @@ public class PagamentoService extends BaseService {
             throw new PagamentoNaoEncontradoException("Operação inválida! Pagamento não pode ser vazio.");
         }
 
-        String statusPedido = this.pedidoPagoEndPoint.buscarStatusPedidoById(pagamentoDTO.getPedidoId());
+        String statusPedido = this.pedidoSysEndPoint.buscarStatusPedidoById(pagamentoDTO.getPedidoId());
         if (!statusPedido.equals("PRONTO")) {
             throw new PedidoNaoEstaProntoException("Operação inválida! Pedido ainda não esta pronto.");
         }
@@ -109,7 +109,7 @@ public class PagamentoService extends BaseService {
 
         this.pagamentoRepository.save(pagamento);
 
-        this.pedidoPagoEndPoint.pagarPedidoById(pagamento.getPedidoId());
+        this.pedidoSysEndPoint.pagarPedidoById(pagamento.getPedidoId());
 
     }
 }
